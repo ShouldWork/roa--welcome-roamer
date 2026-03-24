@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── User → Location mapping ──
+    // Each user gets a doc at users/{uid} storing their assigned locationId.
+    // Created once on first login (by the user themselves).
+    // Only location owners can reassign a user to their location.
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null
+                    && request.auth.token.email in
+                       get(/databases/$(database)/documents/locations/$(request.resource.data.locationId)).data.ownerEmails;
+    }
+
+    // ── Location docs ──
+    match /locations/{locId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+
+      // Existing owners can update anything on their location
+      allow update: if request.auth != null
+                    && request.auth.token.email in resource.data.ownerEmails;
+
+      // Self-assignment: a new user can add ONLY their own email to ownerEmails
+      allow update: if request.auth != null
+                    && !(request.auth.token.email in resource.data.ownerEmails)
+                    && request.auth.token.email in request.resource.data.ownerEmails
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerEmails'])
+                    && request.resource.data.ownerEmails.size() == resource.data.ownerEmails.size() + 1;
+
+      // Pages subcollection: public read, write by location owners
+      match /pages/{pageId} {
+        allow read: if true;
+        allow write: if request.auth != null
+                     && request.auth.token.email in
+                        get(/databases/$(database)/documents/locations/$(locId)).data.ownerEmails;
+      }
+    }
+
+    // ── Catalog: public read, write restricted to assigned users ──
+    match /manufacturers/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    match /models/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "source": "https://rvs.rvsofamerica.com/new-rvs-for-sale",
+  "scrapedAt": "2026-03-24",
+  "manufacturers": [
+    {
+      "id": "mdc",
+      "name": "MDC",
+      "models": [
+        { "id": "mdc-robson-xtt", "name": "Robson XTT" },
+        { "id": "mdc-robson-xtt-mkii", "name": "Robson XTT MKII" },
+        { "id": "mdc-xt9-oge", "name": "XT9 OGE" },
+        { "id": "mdc-xt12hr-oge", "name": "XT12HR OGE" },
+        { "id": "mdc-xt15-4e-oge", "name": "XT15-4E OGE" },
+        { "id": "mdc-xt16hr-ew-oge", "name": "XT16HR East West OGE" },
+        { "id": "mdc-xt16hr-island-oge", "name": "XT16HR Island OGE" },
+        { "id": "mdc-xt17hrt-family-oge", "name": "XT17HRT Family OGE" },
+        { "id": "mdc-xt19hrt-oge", "name": "XT19HRT OGE" }
+      ]
+    },
+    {
+      "id": "pause",
+      "name": "Pause",
+      "models": [
+        { "id": "pause-reboot-14-3", "name": "Pause Reboot 14.3" },
+        { "id": "pause-reboot-17-4", "name": "Pause Reboot 17.4" },
+        { "id": "pause-reboot-19-4", "name": "Pause Reboot 19.4" },
+        { "id": "pause-reboot-19-4-stealth", "name": "Pause Reboot 19.4 Stealth" },
+        { "id": "pause-reboot-19-6", "name": "Pause Reboot 19.6" },
+        { "id": "pause-16-4", "name": "Pause 16.4" },
+        { "id": "pause-20-2", "name": "Pause 20.2" },
+        { "id": "pause-20-3", "name": "Pause 20.3" },
+        { "id": "pause-21-4", "name": "Pause 21.4" },
+        { "id": "pause-xc22-4", "name": "Pause XC22.4" }
+      ]
+    },
+    {
+      "id": "roamer",
+      "name": "Roamer",
+      "models": [
+        { "id": "roamer-1", "name": "Roamer 1" }
+      ]
+    },
+    {
+      "id": "forest-river",
+      "name": "Forest River RV",
+      "models": [
+        { "id": "ibex-16mkd-bm", "name": "IBEX 16MKD-BM" },
+        { "id": "ibex-19qrb-bm", "name": "IBEX 19QRB-BM" },
+        { "id": "ibex-25rlss-bm", "name": "IBEX 25RLSS-BM" },
+        { "id": "ibex-26bre-bm", "name": "IBEX 26BRE-BM" }
+      ]
+    },
+    {
+      "id": "kimberley-kampers",
+      "name": "Kimberley Kampers",
+      "models": [
+        { "id": "kk-kube", "name": "Kimberley Kube" },
+        { "id": "kk-karavan", "name": "Karavan" },
+        { "id": "kk-kruiser-e", "name": "Kruiser E Class" },
+        { "id": "kk-kruiser-s", "name": "Kruiser S Class" },
+        { "id": "kk-kruiser-t", "name": "Kruiser T Class" }
+      ]
+    },
+    {
+      "id": "moab",
+      "name": "The Moab Project",
+      "models": [
+        { "id": "moab-juggernaut", "name": "Moab Juggernaut" },
+        { "id": "moab-trailblazer", "name": "Moab Trailblazer" }
+      ]
+    },
+    {
+      "id": "tribe",
+      "name": "Tribe Trailers",
+      "models": [
+        { "id": "tribe-expedition-500", "name": "Expedition 500" },
+        { "id": "tribe-el-cap", "name": "El Cap" }
+      ]
+    },
+    {
+      "id": "obi",
+      "name": "OBi",
+      "models": [
+        { "id": "obi-dweller-15", "name": "Dweller 15" }
+      ]
+    }
+  ]
+}
