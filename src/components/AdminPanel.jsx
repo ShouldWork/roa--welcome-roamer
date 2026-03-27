@@ -8,8 +8,7 @@ const MFG_PRESETS = [
   { label: 'MDC', logo: mdcLogo },
 ];
 
-let _nid = Date.now();
-const nid = () => ++_nid;
+const nid = () => crypto.randomUUID();
 
 export default function AdminPanel({ page, locationId, onPreview, onConfirm, onRevert, theme, manufacturers, models }) {
   const [closing, setClosing] = useState(false);
@@ -390,9 +389,9 @@ export default function AdminPanel({ page, locationId, onPreview, onConfirm, onR
         </div>
 
         <div className="admin-actions">
-          <button className="btn-cancel" onClick={() => close(false)}>Revert</button>
-          <button className="btn-apply" onClick={() => close(true)}>
-            {isNew ? 'Create' : 'Confirm'}
+          <button className="btn-cancel" onClick={() => close(false)} disabled={uploading || uploadingBg}>Revert</button>
+          <button className="btn-apply" onClick={() => close(true)} disabled={uploading || uploadingBg}>
+            {(uploading || uploadingBg) ? 'Uploading…' : isNew ? 'Create' : 'Confirm'}
           </button>
         </div>
       </div>

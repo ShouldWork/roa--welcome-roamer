@@ -61,9 +61,13 @@ export default function App() {
   }, []);
 
   // ── Theme change → writes to location doc ──
-  const handleThemeChange = useCallback(key => {
+  const handleThemeChange = useCallback(async key => {
     setThemeKey(key);
-    updateLocation({ theme: key });
+    try {
+      await updateLocation({ theme: key });
+    } catch (err) {
+      console.error('Failed to save theme:', err);
+    }
   }, [updateLocation]);
 
   const handleSignOut = useCallback(async () => {
@@ -110,10 +114,16 @@ export default function App() {
   const handleConfirm = useCallback(async () => {
     if (!preview) return;
     try {
+      // Strip bundled asset paths (Vite-hashed URLs like /assets/foo-HASH.png)
+      // before writing to Firestore — they break after redeployment.
+      // Only absolute https:// URLs from Firebase Storage are safe to persist.
+      const safeLogoUrl = preview.mfgLogoUrl?.startsWith('http') ? preview.mfgLogoUrl : '';
+      const saveData = { ...preview, mfgLogoUrl: safeLogoUrl };
+
       if (editingPage?.id) {
-        await updatePage(editingPage.id, preview);
+        await updatePage(editingPage.id, saveData);
       } else {
-        const newId = await createPage(preview);
+        const newId = await createPage(saveData);
         if (!newId) {
           showToast('Save failed — no location');
           return;
