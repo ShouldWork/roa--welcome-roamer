@@ -2,53 +2,53 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Only authenticated ROA staff can write anything
+    function isROA() {
+      return request.auth != null
+        && request.auth.token.email.matches('.*@rvsofamerica[.]com$');
+    }
+
     // ── User → Location mapping ──
-    // Each user gets a doc at users/{uid} storing their assigned locationId.
-    // Created once on first login (by the user themselves).
-    // Only location owners can reassign a user to their location.
     match /users/{uid} {
-      allow read: if request.auth != null && request.auth.uid == uid;
-      allow create: if request.auth != null && request.auth.uid == uid;
-      allow update: if request.auth != null
+      allow read:   if request.auth != null && request.auth.uid == uid;
+      allow create: if isROA() && request.auth.uid == uid;
+      allow update: if isROA()
                     && request.auth.token.email in
                        get(/databases/$(database)/documents/locations/$(request.resource.data.locationId)).data.ownerEmails;
     }
 
     // ── Location docs ──
     match /locations/{locId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-
-      // Existing owners can update anything on their location
-      allow update: if request.auth != null
+      allow read:   if true;
+      allow create: if isROA();
+      allow update: if isROA()
                     && request.auth.token.email in resource.data.ownerEmails;
-
-      // Self-assignment: a new user can add ONLY their own email to ownerEmails
-      allow update: if request.auth != null
+      // Self-assignment: ROA user can add only their own email to ownerEmails
+      allow update: if isROA()
                     && !(request.auth.token.email in resource.data.ownerEmails)
                     && request.auth.token.email in request.resource.data.ownerEmails
                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerEmails'])
                     && request.resource.data.ownerEmails.size() == resource.data.ownerEmails.size() + 1;
 
-      // Pages subcollection: public read, write by location owners
+      // Pages subcollection: public read (display screen), ROA-only write
       match /pages/{pageId} {
-        allow read: if true;
-        allow write: if request.auth != null
+        allow read:  if true;
+        allow write: if isROA()
                      && request.auth.token.email in
                         get(/databases/$(database)/documents/locations/$(locId)).data.ownerEmails;
       }
     }
 
-    // ── Catalog: public read, write restricted to assigned users ──
+    // ── Catalog: public read, ROA-only write ──
     match /manufacturers/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null
-                   && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      allow read:  if true;
+      allow write: if isROA();
     }
+
     match /models/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null
-                   && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      allow read:  if true;
+      allow write: if isROA();
     }
+
   }
 }
